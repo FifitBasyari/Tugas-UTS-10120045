@@ -1,0 +1,75 @@
+package com.example.tugasuts_10120045;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.tugasuts_10120045.helper.Helper10120045FifitSitiNurfitriyatiBasyariIF2;
+
+public class Editor10120045FifitSitiNurfitriyatiBasyariIF2 extends AppCompatActivity {
+
+    private EditText editName, editEmail;
+    private Button btnSave;
+    private Helper10120045FifitSitiNurfitriyatiBasyariIF2 db = new Helper10120045FifitSitiNurfitriyatiBasyariIF2(this);
+    private String id, name, email;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_editor10120045_fifit_siti_nurfitriyati_basyari_if2);
+
+        editName = findViewById(R.id.edit_name);
+        editEmail = findViewById(R.id.edit_email);
+        btnSave = findViewById(R.id.btn_save);
+
+        id = getIntent().getStringExtra("id");
+        name = getIntent().getStringExtra("name");
+        email = getIntent().getStringExtra("email");
+
+        if (id == null || id.equals("")){
+            setTitle("Tambah User");
+        }else {
+            setTitle("Edit User");
+            editName.setText(name);
+            editEmail.setText(email);
+        }
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (id == null || id.equals("")){
+                        save();
+                    } else {
+                        edit();
+                    }
+                }catch (Exception e){
+                    Log.e("Saving", e.getMessage() );
+                }
+            }
+        });
+    }
+
+    private void save(){
+        if (String.valueOf(editName.getText()).equals("") || String.valueOf(editEmail.getText()).equals("")){
+            Toast.makeText(getApplicationContext(), "Silahkan isi semua data!", Toast.LENGTH_SHORT).show();
+        }else {
+            db.insert(editName.getText().toString(), editEmail.getText().toString());
+            finish();
+        }
+    }
+
+    private void edit(){
+        if (String.valueOf(editName.getText()).equals("") || String.valueOf(editEmail.getText()).equals("")){
+            Toast.makeText(getApplicationContext(), "Silahkan isi semua data!", Toast.LENGTH_SHORT).show();
+        }else {
+            db.update(Integer.parseInt(id), editName.getText().toString(), editEmail.getText().toString());
+            finish();
+        }
+    }
+
+}
